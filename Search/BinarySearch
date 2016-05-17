@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Projecteuler.Algorithms.Search {
+    /// <summary>
+    /// Better for ordered tree or graph
+    /// BigO(log(n))
+    /// The binary search algorithm begins by comparing the target value to the value
+    /// of the middle element of the sorted array. If the target value is equal to the
+    /// middle element's value, then the position is returned and the search is finished.
+    /// If the target value is less than the middle element's value, then the search
+    /// continues on the lower half of the array;
+    /// </summary>
+    public class BinarySearch {
+
+        public int Search(int[] orderedItems, int itemToSearch) {
+
+            if (orderedItems == null)
+                return -1;
+
+            var lowerIndex = 0;
+            var uppperIndex = orderedItems.Length - 1;
+
+            while (uppperIndex > lowerIndex) {
+                var midIndex = (lowerIndex + uppperIndex) / 2;
+
+                if (midIndex == lowerIndex) {
+                    var currItem = orderedItems[midIndex];
+                    var nextItem = orderedItems[midIndex + 1];
+                    if (currItem == itemToSearch)
+                        return midIndex;
+                    else if (nextItem == itemToSearch) {
+                        return midIndex + 1;
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+
+                var currentItem = orderedItems[midIndex];
+                if (currentItem == itemToSearch)
+                    return midIndex;
+                else if (currentItem > itemToSearch) {
+                    uppperIndex = midIndex;
+                }
+                else {
+                    lowerIndex = midIndex;
+                }
+
+
+            }
+            return -1;
+        }
+
+        //ke bhayo?phone aako ho?yes
+        public object TestBinarySearch() {
+
+            var orderedList = new int[] { 1, 2, 3, 4, 5 };
+
+            var result = this.Search(orderedList, 1);
+            Debug.Assert(result == 0, "Expected index of 1 is 0");
+
+            result = this.Search(orderedList, 2);
+            Debug.Assert(result == 1, "Expected index of 2 is 1");
+
+            result = this.Search(orderedList, 3);
+            Debug.Assert(result == 2, "Expected index of 3 is 2");
+
+            result = this.Search(orderedList, 4);
+            Debug.Assert(result == 3, "Expected index of 4 is 3");
+
+            result = this.Search(orderedList, 5);
+            Debug.Assert(result == 4, "Expected index of 5 is 4");
+
+            result = this.Search(orderedList, 10);
+            Debug.Assert(result == -1, "Expected index of 10 is 1");
+
+            result = this.Search(orderedList, -1);
+            Debug.Assert(result == -1, "Expected index of -1 is 1");
+
+
+            orderedList = new int[] { };
+            result = this.Search(orderedList, 1);
+            Debug.Assert(result == -1, "Expected index of 1 is -1");
+
+            result = this.Search(orderedList, -1);
+            Debug.Assert(result == -1, "Expected index of -1 is -1");
+
+            orderedList = null;
+            result = this.Search(orderedList, 1);
+            Debug.Assert(result == -1, "Expected index of 1 is -1");
+
+            return "OK";
+        }
+    }
+}
