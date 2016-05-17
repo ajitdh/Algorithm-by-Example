@@ -56,7 +56,6 @@ namespace Projecteuler.Algorithms.Search {
             return -1;
         }
 
-        //ke bhayo?phone aako ho?yes
         public object TestBinarySearch() {
 
             var orderedList = new int[] { 1, 2, 3, 4, 5 };
