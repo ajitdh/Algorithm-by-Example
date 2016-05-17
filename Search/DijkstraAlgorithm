@@ -1,0 +1,141 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Algorithms.Search {
+    /// <summary>
+    /// https://www.youtube.com/watch?v=8Ls1RqHCOPw
+    /// Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph
+    /// </summary>
+    public class DijkstraAlgorithm {
+
+        /// <summary>
+        /// Called Vertex when used in graph
+        /// Called Node when used in tree
+        /// </summary>
+        public class Vertex {
+            public string Name { get; set; }
+
+            public bool AlreadyVisited { get; set; }
+            public int ShortestDistanceFromSource { get; set; }
+            public Vertex ShortestDistanceVia { get; set; }
+
+            public Vertex(string name) {
+                Name = name;
+                ShortestDistanceFromSource = Int32.MaxValue;
+            }
+        }
+
+        public class Edge {
+            public Vertex From { get; set; }
+            public Vertex To { get; set; }
+            public int Distance { get; set; }
+
+            public Edge(Vertex from, Vertex to, int distance) {
+                From = from;
+                To = to;
+                Distance = distance;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CalculateShortestDistance(List<Vertex> vertices, List<Edge> edges, Vertex from) {
+
+            from.AlreadyVisited = true;
+
+            var adjacentEdges = edges.Where(abc => abc.From == from).ToList();
+            foreach (var adjacentEdge in adjacentEdges) {
+                var distanceOfCurrentVertexFromSource = from.ShortestDistanceFromSource + adjacentEdge.Distance;
+                if (distanceOfCurrentVertexFromSource < adjacentEdge.To.ShortestDistanceFromSource) {
+                    adjacentEdge.To.ShortestDistanceFromSource = distanceOfCurrentVertexFromSource;
+                    adjacentEdge.To.ShortestDistanceVia = from;
+                }
+            }
+
+            //select the vertex with shortest path that we have not visited yet
+            var newFrom = vertices.Where(abc => !abc.AlreadyVisited).OrderBy(abc => abc.ShortestDistanceFromSource).FirstOrDefault();
+            if (newFrom.ShortestDistanceFromSource != Int32.MaxValue)
+                CalculateShortestDistance(vertices, edges, newFrom);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RunTest() {
+
+            var a = new Vertex("a");
+            var b = new Vertex("b");
+            var c = new Vertex("c");
+            var d = new Vertex("d");
+            var e = new Vertex("e");
+            var f = new Vertex("f");
+            var g = new Vertex("g");
+            var h = new Vertex("h");
+
+            var vertices = new List<Vertex>();
+            vertices.Add(a);
+            vertices.Add(b);
+            vertices.Add(c);
+            vertices.Add(d);
+            vertices.Add(e);
+            vertices.Add(f);
+            vertices.Add(g);
+            vertices.Add(h);
+
+
+            var edges = new List<Edge>();
+            var ad80 = new Edge(a, d, 80);
+            var ag90 = new Edge(a, g, 90);
+            var ab20 = new Edge(a, b, 20);
+
+            var bf10 = new Edge(b, f, 10);
+
+            var ch20 = new Edge(c, h, 20);
+            var cf50 = new Edge(c, f, 50);
+            var cd10 = new Edge(c, d, 10);
+
+            var dg20 = new Edge(d, g, 20);
+            var dc10 = new Edge(d, c, 10);
+
+            var eb50 = new Edge(e, b, 50);
+            var eg30 = new Edge(e, g, 30);
+
+            var fd40 = new Edge(f, d, 40);
+            var fc10 = new Edge(f, c, 10);
+
+            var ga20 = new Edge(g, a, 20);
+
+            edges.Add(ad80);
+            edges.Add(ag90);
+            edges.Add(ab20);
+            edges.Add(bf10);
+            edges.Add(ch20);
+            edges.Add(cf50);
+            edges.Add(cd10);
+            edges.Add(dg20);
+            edges.Add(dc10);
+            edges.Add(eb50);
+            edges.Add(eg30);
+            edges.Add(fd40);
+            edges.Add(fc10);
+            edges.Add(ga20);
+
+            a.ShortestDistanceFromSource = 0;
+            CalculateShortestDistance(vertices, edges, a);
+
+            Debug.Assert(a.ShortestDistanceFromSource == 0, "Shortest distance to A is 0");
+            Debug.Assert(b.ShortestDistanceFromSource == 20, "Shortest distance to B is 20");
+            Debug.Assert(c.ShortestDistanceFromSource == 40, "Shortest distance to C is 40");
+            Debug.Assert(d.ShortestDistanceFromSource == 50, "Shortest distance to D is 50");
+            Debug.Assert(e.ShortestDistanceFromSource == Int32.MaxValue, "Shortest distance to E is Int32.MaxValue");
+            Debug.Assert(f.ShortestDistanceFromSource == 30, "Shortest distance to F is 30");
+            Debug.Assert(g.ShortestDistanceFromSource == 70, "Shortest distance to G is 70");
+            Debug.Assert(h.ShortestDistanceFromSource == 60, "Shortest distance to H is 60");
+        }
+    }
+}
