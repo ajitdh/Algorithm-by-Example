@@ -48,8 +48,7 @@ namespace Algorithms.Search {
         }
 
         public bool Search(List<Edge> edges, Vertex root, int num) {
-            var items = BredthFirstTransverse(edges, root).ToList();
-            foreach (var item in items) {
+            foreach (var item in BredthFirstTransverse(edges, root)) {
                 if (item.Value == num)
                     return true;
             }
