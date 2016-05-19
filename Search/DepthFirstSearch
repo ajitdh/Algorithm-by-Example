@@ -1,0 +1,99 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Algorithms.Search {
+    /// <summary>
+    /// - Better for unorder tree or graph
+    /// - Start at the node
+    /// http://www.programmerinterview.com/index.php/data-structures/dfs-vs-bfs/
+    /// </summary>
+    public class DepthFirstSearch {
+        /// <summary>
+        /// Called Vertex when used in graph
+        /// Called Node when used in tree
+        /// </summary>
+        public class Vertex {
+            public int Value { get; set; }
+            public Vertex(int value) {
+                Value = value;
+            }
+        }
+
+        public class Edge {
+            public Vertex From { get; set; }
+            public Vertex To { get; set; }
+        }
+
+        public IEnumerable<Vertex> DepthFirstTransverse(List<Edge> edges, Vertex root) {
+            var alreadyVisited = new HashSet<Vertex>();
+            var stack = new Stack<Vertex>();
+            stack.Push(root);
+            while (stack.Count > 0) {
+                var current = stack.Pop();
+                alreadyVisited.Add(current);
+                yield return current;
+
+                var adjacentEdges = edges.Where(abc => abc.From == current).Reverse();
+                foreach (var adjacentEdge in adjacentEdges) {
+                    if (!alreadyVisited.Contains(adjacentEdge.To)) {
+                        stack.Push(adjacentEdge.To);
+                    }
+                }
+            }
+        }
+
+        public bool Search(List<Edge> edges, Vertex root, int num) {
+            var items = DepthFirstTransverse(edges, root).ToList();
+            foreach (var item in items) {
+                if (item.Value == num)
+                    return true;
+            }
+            return false;
+        }
+
+        public void RunTest() {
+            //=======================
+            //       d
+            //      / \
+            //     /   \
+            //    /     \
+            //   c       e
+            //  / \     /  \
+            // a   b   f    g
+            //=======================
+            var a = new Vertex(1);
+            var b = new Vertex(2);
+            var c = new Vertex(3);
+            var d = new Vertex(4);
+            var e = new Vertex(5);
+            var f = new Vertex(6);
+            var g = new Vertex(7);
+
+            var edges = new List<Edge>();
+
+            edges.Add(new Edge() { From = d, To = c });
+            edges.Add(new Edge() { From = d, To = e });
+            edges.Add(new Edge() { From = c, To = a });
+            edges.Add(new Edge() { From = c, To = b });
+            edges.Add(new Edge() { From = e, To = f });
+            edges.Add(new Edge() { From = e, To = g });
+
+            var items = DepthFirstTransverse(edges, d).ToList();
+            Debug.Assert(items[0] == d, "0 item should be d");
+            Debug.Assert(items[1] == c, "1 item should be c");
+            Debug.Assert(items[2] == a, "2 item should be a");
+            Debug.Assert(items[3] == b, "3 item should be b");
+            Debug.Assert(items[4] == e, "4 item should be e");
+            Debug.Assert(items[5] == f, "5 item should be f");
+            Debug.Assert(items[6] == g, "6 item should be g");
+
+            Debug.Assert(Search(edges, d, 1), "Should find 1");
+            Debug.Assert(!Search(edges, d, -1), "Should not find 1");
+        }
+    }
+}
