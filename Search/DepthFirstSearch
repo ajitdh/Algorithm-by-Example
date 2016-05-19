@@ -59,6 +59,26 @@ namespace Algorithms.Search {
             return false;
         }
 
+        /// <summary>
+        /// Second implementation 
+        /// </summary>
+        public IEnumerable<Vertex> DepthFirstTransverseRecursive(List<Edge> edges, Vertex root) {
+            yield return root;
+            var adjacentEdges = edges.Where(abc => abc.From == root);
+            foreach (var adjacent in adjacentEdges) {
+                foreach (var item in DepthFirstTransverseRecursive(edges, adjacent.To))
+                    yield return item;
+            }
+        }
+
+        public bool SearchRecursive(List<Edge> edges, Vertex root, int num) {
+            foreach (var item in DepthFirstTransverseRecursive(edges, root)) {
+                if (item.Value == num)
+                    return true;
+            }
+            return false;
+        }
+
         public void RunTest() {
             //=======================
             //       d
@@ -76,9 +96,7 @@ namespace Algorithms.Search {
             var e = new Vertex(5);
             var f = new Vertex(6);
             var g = new Vertex(7);
-
             var edges = new List<Edge>();
-
             edges.Add(new Edge() { From = d, To = c });
             edges.Add(new Edge() { From = d, To = e });
             edges.Add(new Edge() { From = c, To = a });
@@ -94,9 +112,19 @@ namespace Algorithms.Search {
             Debug.Assert(items[4] == e, "4 item should be e");
             Debug.Assert(items[5] == f, "5 item should be f");
             Debug.Assert(items[6] == g, "6 item should be g");
-
             Debug.Assert(Search(edges, d, 1), "Should find 1");
             Debug.Assert(!Search(edges, d, -1), "Should not find -1");
+
+            items = DepthFirstTransverseRecursive(edges, d).ToList();
+            Debug.Assert(items[0] == d, "0 item should be d");
+            Debug.Assert(items[1] == c, "1 item should be c");
+            Debug.Assert(items[2] == a, "2 item should be a");
+            Debug.Assert(items[3] == b, "3 item should be b");
+            Debug.Assert(items[4] == e, "4 item should be e");
+            Debug.Assert(items[5] == f, "5 item should be f");
+            Debug.Assert(items[6] == g, "6 item should be g");
+            Debug.Assert(SearchRecursive(edges, d, 1), "Should find 1");
+            Debug.Assert(!SearchRecursive(edges, d, -1), "Should not find -1");
         }
     }
 }
