@@ -30,6 +30,9 @@ namespace Algorithms.Search {
             public Vertex To { get; set; }
         }
 
+        /// <summary>
+        /// This works for both tree and graph (already visited flag is used to avoid loop of graph)
+        /// </summary>
         public IEnumerable<Vertex> BredthFirstTransverse(List<Edge> edges, Vertex root) {
             HashSet<Vertex> alreadyVisited = new HashSet<Vertex>();
             var queue = new Queue<Vertex>();
@@ -92,7 +95,7 @@ namespace Algorithms.Search {
             Debug.Assert(items[6] == g, "6 item should be g");
 
             Debug.Assert(Search(edges, d, 1), "Should find 1");
-            Debug.Assert(!Search(edges, d, -1), "Should not find 1");
+            Debug.Assert(!Search(edges, d, -1), "Should not find -1");
         }
     }
 }
