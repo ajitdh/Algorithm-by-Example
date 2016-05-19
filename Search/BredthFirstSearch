@@ -17,6 +17,7 @@ namespace Algorithms.Search {
         /// <summary>
         /// Called Vertex when used in graph
         /// Called Node when used in tree
+        /// </summary>
         public class Vertex {
             public int Value { get; set; }
             public Vertex(int value) {
@@ -56,6 +57,15 @@ namespace Algorithms.Search {
         }
 
         public void RunTest() {
+            //=======================
+            //       d
+            //      / \
+            //     /   \
+            //    /     \
+            //   c       e
+            //  / \     /  \
+            // a   b   f    g
+            //=======================
             var a = new Vertex(1);
             var b = new Vertex(2);
             var c = new Vertex(3);
