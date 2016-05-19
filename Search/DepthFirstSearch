@@ -29,6 +29,10 @@ namespace Algorithms.Search {
             public Vertex To { get; set; }
         }
 
+        /// <summary>
+        /// This method will continue to work when the tree/graph is so deep that a recursive traversal would blow the call stack and cause a StackOverflowException
+        /// This works for both tree and graph (already visited flag is used to avoid loop of graph)
+        /// </summary>
         public IEnumerable<Vertex> DepthFirstTransverse(List<Edge> edges, Vertex root) {
             var alreadyVisited = new HashSet<Vertex>();
             var stack = new Stack<Vertex>();
@@ -92,7 +96,7 @@ namespace Algorithms.Search {
             Debug.Assert(items[6] == g, "6 item should be g");
 
             Debug.Assert(Search(edges, d, 1), "Should find 1");
-            Debug.Assert(!Search(edges, d, -1), "Should not find 1");
+            Debug.Assert(!Search(edges, d, -1), "Should not find -1");
         }
     }
 }
